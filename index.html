@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>மாதாந்திர வட்டி கணிப்பான்</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f4f8;
+      margin: 0; padding: 0;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #e6f4ea;
+      gap: 10px;
+    }
+    .logo {
+      height: 50px;
+    }
+    header h1 {
+      font-size: 20px;
+      color: #00754a;
+    }
+    .calculator {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 450px;
+      margin: 20px auto;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+    }
+    .calculate {
+      background: linear-gradient(45deg, #00c853, #64dd17);
+    }
+    .download {
+      background: linear-gradient(45deg, #2962ff, #448aff);
+    }
+    .output {
+      background-color: #e6f4ea;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    @media (max-width: 768px) {
+      .calculator {
+        margin: 20px;
+        padding: 20px;
+      }
+      header h1 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://assets.onecompiler.app/3zky9aw9p/434aefr67/Picsart_24-12-25_21-18-29-883.jpg" alt="Calculator Logo" class="logo">
+    <h1>மாதாந்திர வட்டி கணிப்பான்</h1>
+  </header>
+
+  <div class="calculator">
+    <label>முதலீட்டு தொகை (₹)</label>
+    <input type="number" id="principal" placeholder="உதாரணம்: 100000">
+
+    <label>மாத வட்டி விகிதம் (%)</label>
+    <input type="number" id="monthlyRate" placeholder="உதாரணம்: 2">
+
+    <label>கால அவகாசம் (மாதங்களில்)</label>
+    <input type="number" id="months" placeholder="உதாரணம்: 12">
+
+    <button class="btn calculate" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
+    <button class="btn download" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
+
+    <div class="output" id="result"></div>
+  </div>
+
+  <script>
+    function calculateMonthlyInterest() {
+      const principal = parseFloat(document.getElementById("principal").value);
+      const monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
+      const months = parseInt(document.getElementById("months").value);
+
+      if (isNaN(principal) || isNaN(monthlyRate) || isNaN(months)) {
+        document.getElementById("result").innerHTML = '<span style="color:red">தயவுசெய்து எல்லா விவரங்களையும் நிரப்புங்கள்.</span>';
+        return;
+      }
+
+      const monthlyInterest = (principal * monthlyRate) / 100;
+      const totalInterest = monthlyInterest * months;
+      const totalAmount = principal + totalInterest;
+
+      const resultHTML = `
+        <strong>முதலீடு:</strong> ₹${principal.toLocaleString()}<br>
+        <strong>மாத வட்டி விகிதம்:</strong> ${monthlyRate}%<br>
+        <strong>காலம்:</strong> ${months} மாதங்கள்<br>
+        <strong>மாதாந்திர வட்டி:</strong> ₹${monthlyInterest.toFixed(2).toLocaleString()}<br>
+        <strong>மொத்த வட்டி:</strong> ₹${totalInterest.toLocaleString()}<br>
+        <strong>மொத்த தொகை:</strong> ₹${totalAmount.toLocaleString()}
+      `;
+      document.getElementById("result").innerHTML = resultHTML;
+    }
+
+    async function downloadPDF() {
+      const result = document.getElementById("result").innerText;
+      if (!result) {
+        alert("முதலில் கணக்கீடு செய்யுங்கள்!");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Logo
+      const img = new Image();
+      img.src = "calculator-logo.png"; // Local image path
+      img.onload = () => {
+        doc.addImage(img, "PNG", 10, 10, 30, 30);
+        doc.setFontSize(16);
+        doc.text("மாத வட்டி கணிப்பு முடிவு", 50, 20);
+        doc.setFontSize(12);
+
+        const lines = result.split('\n');
+        let y = 50;
+        lines.forEach(line => {
+          doc.text(line, 10, y);
+          y += 10;
+        });
+
+        doc.save("Monthly_Interest_Report.pdf");
+      };
+    }
+  </script>
+</body>
+</html>
