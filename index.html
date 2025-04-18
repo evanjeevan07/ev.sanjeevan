@@ -10,36 +10,21 @@
     }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4f8;
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
       margin: 0;
-      padding: 20px;
+      padding: 0;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
-    }
-    header img {
-      height: 50px;
-      margin-right: 10px;
-    }
-    header h1 {
-      font-size: 22px;
-      color: #00754a;
+      align-items: center;
+      min-height: 100vh;
     }
     .calculator {
       background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 600px;
+      max-width: 480px;
       animation: slideFade 0.5s ease;
     }
     h2 {
@@ -51,13 +36,14 @@
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
+      margin-top: 12px;
       font-size: 16px;
     }
     input {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
+      margin-top: 6px;
+      margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
@@ -65,35 +51,69 @@
     .btn {
       width: 100%;
       padding: 12px;
-      margin-top: 15px;
+      margin-top: 10px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
-    }
-    .btn-calc {
-      background: linear-gradient(135deg, #00c853, #009624);
+      background-image: linear-gradient(to right, #26a69a, #66bb6a);
       color: white;
+      transition: background 0.3s ease;
     }
-    .btn-calc:hover {
-      background: linear-gradient(135deg, #009624, #00695c);
-    }
-    .btn-pdf {
-      background: linear-gradient(135deg, #ffd600, #ff8f00);
-      color: black;
-    }
-    .btn-pdf:hover {
-      background: linear-gradient(135deg, #ffab00, #ff6f00);
+    .btn:hover {
+      background-image: linear-gradient(to right, #00796b, #388e3c);
     }
     .output {
       background-color: #e6f4ea;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 25px;
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 20px;
       font-size: 16px;
       line-height: 1.6;
+    }
+    .formula {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      font-style: italic;
+    }
+    .download-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #008CBA;
+      color: white;
+      transition: background-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .download-btn:hover {
+      background-color: #005f73;
+    }
+    .download-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 20px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: beam 3s infinite linear;
+    }
+    @keyframes beam {
+      0% {
+        left: -100%;
+      }
+      100% {
+        left: 200%;
+      }
     }
     @keyframes slideFade {
       from { opacity: 0; transform: translateY(10px); }
@@ -101,13 +121,13 @@
     }
     @media (max-width: 768px) {
       .calculator {
-        padding: 20px;
+        padding: 25px;
         margin: 0 15px;
       }
       h2 {
         font-size: 20px;
       }
-      input, button {
+      input, .btn, .download-btn {
         font-size: 14px;
         padding: 10px;
       }
@@ -115,15 +135,19 @@
         font-size: 14px;
       }
     }
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 18px;
+      }
+      input, .btn, .download-btn {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAUACAIAAACXhmigAAABBmlDQ1..." alt="Logo" />
-    <h1>மாதாந்திர வட்டி கணிப்பான்</h1>
-  </header>
-
   <div class="calculator">
+    <h2>மாத வட்டி கணிப்பான்</h2>
     <label>முதலீட்டு தொகை (₹)</label>
     <input type="number" id="principal" placeholder="உதாரணம்: 100000">
 
@@ -133,15 +157,17 @@
     <label>கால அவகாசம் (மாதங்களில்)</label>
     <input type="number" id="months" placeholder="உதாரணம்: 12">
 
-    <button class="btn btn-calc" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
-    <button class="btn btn-pdf" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
+    <button class="btn" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
+
+    <button class="download-btn" onclick="downloadPDF()" style="display:none;">PDF பதிவிறக்கம்</button>
 
     <div class="output" id="result"></div>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script>
-    let latestData = null;
+    let calculatedResult = '';
+
     function calculateMonthlyInterest() {
       const principal = parseFloat(document.getElementById("principal").value);
       const monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
@@ -149,6 +175,8 @@
 
       if (isNaN(principal) || isNaN(monthlyRate) || isNaN(months)) {
         document.getElementById("result").innerHTML = '<span style="color:red">தயவுசெய்து எல்லா விவரங்களையும் நிரப்புங்கள்.</span>';
+        document.querySelector('.download-btn').style.display = 'none';
+        calculatedResult = '';
         return;
       }
 
@@ -156,7 +184,7 @@
       const totalInterest = monthlyInterest * months;
       const totalAmount = principal + totalInterest;
 
-      const resultHTML = `
+      calculatedResult = `
         <strong>முதலீடு:</strong> ₹${principal.toLocaleString()}<br>
         <strong>மாத வட்டி விகிதம்:</strong> ${monthlyRate}%<br>
         <strong>காலம்:</strong> ${months} மாதங்கள்<br>
@@ -165,51 +193,32 @@
         <strong>மொத்த தொகை:</strong> ₹${totalAmount.toLocaleString()}
       `;
 
-      latestData = {
-        principal,
-        monthlyRate,
-        months,
-        monthlyInterest,
-        totalInterest,
-        totalAmount
-      };
-
-      document.getElementById("result").innerHTML = resultHTML;
+      document.getElementById("result").innerHTML = calculatedResult;
+      document.querySelector('.download-btn').style.display = 'block';
     }
 
     function downloadPDF() {
-      if (!latestData) {
-        alert("முதலில் கணக்கீடு செய்யவும்.");
+      if (!calculatedResult) {
+        alert("முதலில் கணக்கிடுங்கள்.");
         return;
       }
 
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const pdf = new jsPDF();
 
-      // Add Logo
-      const logoBase64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABQAAAAUACAIAAACXhmigAAABBmlDQ1...";
-      doc.addImage(logoBase64, 'PNG', 10, 10, 30, 30);
+      pdf.setFontSize(20);
+      pdf.text("மாதாந்திர வட்டி கணக்கீடு", 10, 20);
+      pdf.setFontSize(12);
 
-      doc.setFontSize(16);
-      doc.text("மாதாந்திர வட்டி கணிப்பு முடிவு", 50, 20);
-      doc.setFontSize(12);
-      let y = 50;
-
-      const lines = [
-        `முதலீடு: ₹${latestData.principal.toLocaleString()}`,
-        `மாத வட்டி விகிதம்: ${latestData.monthlyRate}%`,
-        `காலம்: ${latestData.months} மாதங்கள்`,
-        `மாதாந்திர வட்டி: ₹${latestData.monthlyInterest.toFixed(2).toLocaleString()}`,
-        `மொத்த வட்டி: ₹${latestData.totalInterest.toLocaleString()}`,
-        `மொத்த தொகை: ₹${latestData.totalAmount.toLocaleString()}`
-      ];
-
+      const lines = calculatedResult.split('<br>');
+      let y = 35;
       lines.forEach(line => {
-        doc.text(line, 20, y);
+        const formattedLine = line.replace(/<[^>]*>/g, ''); // HTML டேக்குகளை நீக்குகிறது
+        pdf.text(formattedLine, 10, y);
         y += 10;
       });
 
-      doc.save("வட்டி_கணிப்பு.pdf");
+      pdf.save("vatti_kanakkidu.pdf");
     }
   </script>
 </body>
