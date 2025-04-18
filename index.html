@@ -1,39 +1,48 @@
-<!DOCTYPE html><html lang="ta">
+<!DOCTYPE html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>மாதாந்திர வட்டி கணிப்பான்</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
     }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      background-color: #f0f4f8;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
     }
     header {
-      width: 100%;
-      background: linear-gradient(90deg, #00754a, #00cba9);
-      padding: 20px;
+      background: linear-gradient(90deg, #00754a, #00b894);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       color: white;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
+    }
+    header img {
+      height: 40px;
+    }
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 30px 15px;
     }
     .calculator {
       background: #fff;
       padding: 30px;
-      margin: 30px 20px;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 500px;
+      max-width: 450px;
+      animation: slideFade 0.5s ease;
     }
     h2 {
       text-align: center;
@@ -49,8 +58,8 @@
     }
     input {
       width: 100%;
-      padding: 12px;
-      margin-top: 8px;
+      padding: 10px;
+      margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
@@ -64,54 +73,81 @@
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .calculate-btn {
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
       color: white;
-      transition: background 0.3s;
     }
-    #calculateBtn {
-      background: linear-gradient(90deg, #00c853, #64dd17);
+    .download-btn {
+      background: linear-gradient(135deg, #00bcd4, #006064);
+      color: white;
     }
-    #calculateBtn:hover {
-      background: linear-gradient(90deg, #64dd17, #00c853);
-    }
-    #downloadBtn {
-      background: linear-gradient(90deg, #2962ff, #448aff);
-    }
-    #downloadBtn:hover {
-      background: linear-gradient(90deg, #448aff, #2962ff);
+    .btn:hover {
+      opacity: 0.9;
     }
     .output {
       background-color: #e6f4ea;
-      padding: 20px;
+      padding: 15px;
       border-radius: 10px;
       margin-top: 20px;
       font-size: 16px;
       line-height: 1.6;
     }
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     @media (max-width: 768px) {
+      header h1 {
+        font-size: 16px;
+      }
       .calculator {
         padding: 20px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      input, .btn {
+        font-size: 14px;
+        padding: 10px;
+      }
+      .output {
+        font-size: 14px;
       }
     }
   </style>
 </head>
 <body>
-  <header>மாதாந்திர வட்டி கணிப்பான்</header>
-  <div class="calculator">
-    <h2>வட்டி கணிப்பு</h2><label>முதலீட்டு தொகை (₹)</label>
-<input type="number" id="principal" placeholder="உதாரணம்: 100000" />
 
-<label>மாத வட்டி விகிதம் ( சதவீதம்%)</label>
-<input type="number" id="monthlyRate" placeholder="உதாரணம்: 2" />
+  <header>
+    <h1>மாத வட்டி கணிப்பான்</h1>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAoCAYAAABur2jcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAA..." alt="Logo">
+  </header>
 
-<label>கால அவகாசம் (மாதங்களில்)</label>
-<input type="number" id="months" placeholder="உதாரணம்: 12" />
+  <div class="container">
+    <div class="calculator">
+      <h2>வட்டி கணக்கீடு</h2>
 
-<button class="btn" id="calculateBtn" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
-<button class="btn" id="downloadBtn" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
+      <label>முதலீட்டு தொகை (₹)</label>
+      <input type="number" id="principal" placeholder="உதாரணம்: 100000">
 
-<div class="output" id="result"></div>
+      <label>மாத வட்டி விகிதம் (%)</label>
+      <input type="number" id="monthlyRate" placeholder="உதாரணம்: 2">
 
-  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  <script>
+      <label>கால அவகாசம் (மாதங்களில்)</label>
+      <input type="number" id="months" placeholder="உதாரணம்: 12">
+
+      <button class="btn calculate-btn" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
+      <button class="btn download-btn" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
+
+      <div class="output" id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    let resultText = "";
+
     function calculateMonthlyInterest() {
       const principal = parseFloat(document.getElementById("principal").value);
       const monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
@@ -119,6 +155,7 @@
 
       if (isNaN(principal) || isNaN(monthlyRate) || isNaN(months)) {
         document.getElementById("result").innerHTML = '<span style="color:red">தயவுசெய்து எல்லா விவரங்களையும் நிரப்புங்கள்.</span>';
+        resultText = "";
         return;
       }
 
@@ -126,20 +163,20 @@
       const totalInterest = monthlyInterest * months;
       const totalAmount = principal + totalInterest;
 
-      const resultHTML = `
-        <strong>முதலீடு:</strong> ₹${principal.toLocaleString()}<br>
-        <strong>மாத வட்டி விகிதம்:</strong> ${monthlyRate}%<br>
-        <strong>காலம்:</strong> ${months} மாதங்கள்<br>
-        <strong>மாதாந்திர வட்டி:</strong> ₹${monthlyInterest.toFixed(2).toLocaleString()}<br>
-        <strong>மொத்த வட்டி:</strong> ₹${totalInterest.toLocaleString()}<br>
-        <strong>மொத்த தொகை:</strong> ₹${totalAmount.toLocaleString()}
+      resultText = `
+        முதலீடு: ₹${principal.toLocaleString()}
+        மாத வட்டி விகிதம்: ${monthlyRate}%
+        காலம்: ${months} மாதங்கள்
+        மாதாந்திர வட்டி: ₹${monthlyInterest.toFixed(2).toLocaleString()}
+        மொத்த வட்டி: ₹${totalInterest.toLocaleString()}
+        மொத்த தொகை: ₹${totalAmount.toLocaleString()}
       `;
-      document.getElementById("result").innerHTML = resultHTML;
+
+      document.getElementById("result").innerHTML = resultText.replace(/\n/g, "<br>");
     }
 
     function downloadPDF() {
-      const resultDiv = document.getElementById("result");
-      if (!resultDiv.innerText.trim()) {
+      if (!resultText.trim()) {
         alert("முதலில் கணக்கிடவும்!");
         return;
       }
@@ -147,21 +184,22 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       doc.setFontSize(16);
-      doc.text("மாத வட்டி கணிப்பு முடிவு", 10, 10);
+      doc.text("மாத வட்டி கணிப்பு முடிவு", 10, 15);
       doc.setFontSize(12);
 
-      const lines = resultDiv.innerText.split('\n');
-      let y = 20;
+      const lines = resultText.split('\n');
+      let y = 30;
       lines.forEach(line => {
-        doc.text(line, 10, y);
+        doc.text(line.trim(), 10, y);
         y += 10;
       });
 
-      // Logo Image (Top Right corner)
-      const logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACW..."; // Use base64 of logo
-      doc.addImage(logo, 'PNG', 150, 5, 40, 20);
+      // Logo in PDF (top right)
+      const logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAAAoCAYAAABur2jcAAAACXBIWXMAAA7EAAAOxAGVKw4bAAA...";
+      doc.addImage(logo, 'PNG', 150, 10, 40, 20);
 
       doc.save("Monthly_Interest_Report.pdf");
     }
-  </script></body>
+  </script>
+</body>
 </html>
