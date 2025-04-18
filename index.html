@@ -1,72 +1,87 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!DOCTYPE html><html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>மாதாந்திர வட்டி கணிப்பான்</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4f8;
-      margin: 0; padding: 0;
+      background: linear-gradient(135deg, #e0f7fa, #ffffff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
     header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100%;
+      background: linear-gradient(90deg, #00754a, #00cba9);
       padding: 20px;
-      background-color: #e6f4ea;
-      gap: 10px;
-    }
-    .logo {
-      height: 50px;
-    }
-    header h1 {
-      font-size: 20px;
-      color: #00754a;
+      color: white;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
     }
     .calculator {
       background: #fff;
       padding: 30px;
+      margin: 30px 20px;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 450px;
-      margin: 20px auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      text-align: center;
+      color: #00754a;
+      margin-bottom: 20px;
+      font-size: 24px;
     }
     label {
       font-weight: bold;
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
+      font-size: 16px;
     }
     input {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
+      padding: 12px;
+      margin-top: 8px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      font-size: 16px;
     }
     .btn {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 15px;
-      font-weight: bold;
       border: none;
       border-radius: 8px;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
       color: white;
+      transition: background 0.3s;
     }
-    .calculate {
-      background: linear-gradient(45deg, #00c853, #64dd17);
+    #calculateBtn {
+      background: linear-gradient(90deg, #00c853, #64dd17);
     }
-    .download {
-      background: linear-gradient(45deg, #2962ff, #448aff);
+    #calculateBtn:hover {
+      background: linear-gradient(90deg, #64dd17, #00c853);
+    }
+    #downloadBtn {
+      background: linear-gradient(90deg, #2962ff, #448aff);
+    }
+    #downloadBtn:hover {
+      background: linear-gradient(90deg, #448aff, #2962ff);
     }
     .output {
       background-color: #e6f4ea;
-      padding: 15px;
+      padding: 20px;
       border-radius: 10px;
       margin-top: 20px;
       font-size: 16px;
@@ -74,38 +89,29 @@
     }
     @media (max-width: 768px) {
       .calculator {
-        margin: 20px;
         padding: 20px;
-      }
-      header h1 {
-        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://assets.onecompiler.app/3zky9aw9p/434aefr67/Picsart_24-12-25_21-18-29-883.jpg" alt="Calculator Logo" class="logo">
-    <h1>மாதாந்திர வட்டி கணிப்பான்</h1>
-  </header>
-
+  <header>மாதாந்திர வட்டி கணிப்பான்</header>
   <div class="calculator">
-    <label>முதலீட்டு தொகை (₹)</label>
-    <input type="number" id="principal" placeholder="உதாரணம்: 100000">
+    <h2>வட்டி கணிப்பு</h2><label>முதலீட்டு தொகை (₹)</label>
+<input type="number" id="principal" placeholder="உதாரணம்: 100000" />
 
-    <label>மாத வட்டி விகிதம் (%)</label>
-    <input type="number" id="monthlyRate" placeholder="உதாரணம்: 2">
+<label>மாத வட்டி விகிதம் ( சதவீதம்%)</label>
+<input type="number" id="monthlyRate" placeholder="உதாரணம்: 2" />
 
-    <label>கால அவகாசம் (மாதங்களில்)</label>
-    <input type="number" id="months" placeholder="உதாரணம்: 12">
+<label>கால அவகாசம் (மாதங்களில்)</label>
+<input type="number" id="months" placeholder="உதாரணம்: 12" />
 
-    <button class="btn calculate" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
-    <button class="btn download" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
+<button class="btn" id="calculateBtn" onclick="calculateMonthlyInterest()">கணக்கிடு</button>
+<button class="btn" id="downloadBtn" onclick="downloadPDF()">PDF பதிவிறக்கு</button>
 
-    <div class="output" id="result"></div>
-  </div>
+<div class="output" id="result"></div>
 
-  <script>
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>  <script>
     function calculateMonthlyInterest() {
       const principal = parseFloat(document.getElementById("principal").value);
       const monthlyRate = parseFloat(document.getElementById("monthlyRate").value);
@@ -131,35 +137,31 @@
       document.getElementById("result").innerHTML = resultHTML;
     }
 
-    async function downloadPDF() {
-      const result = document.getElementById("result").innerText;
-      if (!result) {
-        alert("முதலில் கணக்கீடு செய்யுங்கள்!");
+    function downloadPDF() {
+      const resultDiv = document.getElementById("result");
+      if (!resultDiv.innerText.trim()) {
+        alert("முதலில் கணக்கிடவும்!");
         return;
       }
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("மாத வட்டி கணிப்பு முடிவு", 10, 10);
+      doc.setFontSize(12);
 
-      // Logo
-      const img = new Image();
-      img.src = "calculator-logo.png"; // Local image path
-      img.onload = () => {
-        doc.addImage(img, "PNG", 10, 10, 30, 30);
-        doc.setFontSize(16);
-        doc.text("மாத வட்டி கணிப்பு முடிவு", 50, 20);
-        doc.setFontSize(12);
+      const lines = resultDiv.innerText.split('\n');
+      let y = 20;
+      lines.forEach(line => {
+        doc.text(line, 10, y);
+        y += 10;
+      });
 
-        const lines = result.split('\n');
-        let y = 50;
-        lines.forEach(line => {
-          doc.text(line, 10, y);
-          y += 10;
-        });
+      // Logo Image (Top Right corner)
+      const logo = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACW..."; // Use base64 of logo
+      doc.addImage(logo, 'PNG', 150, 5, 40, 20);
 
-        doc.save("Monthly_Interest_Report.pdf");
-      };
+      doc.save("Monthly_Interest_Report.pdf");
     }
-  </script>
-</body>
+  </script></body>
 </html>
